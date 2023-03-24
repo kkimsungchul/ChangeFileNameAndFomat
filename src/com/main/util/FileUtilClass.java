@@ -285,7 +285,12 @@ public class FileUtilClass {
         date = date + fileMap.get("lastModifiedTime").toString().replaceAll("T"," ");
         date = date.substring(0,25) + " +0900";
         //2019-03-26T08:06:08Z
-        categories = categories + fileMap.get("fileName").toString().substring(fileMap.get("fileName").toString().indexOf("\\[")+2,fileMap.get("fileName").toString().indexOf("]")).replaceAll(" ","");
+        //targetDirPath=C:\IntellijProject\kkimsungchul.github.io\_posts\Vue,
+        String[] temp = fileMap.get("targetDirPath").toString().split("\\\\");
+        categories = categories + temp[temp.length-1].replaceAll(" ","");
+        //categories = categories + fileMap.get("fileName").toString().substring(fileMap.get("fileName").toString().indexOf("\\[")+2,fileMap.get("fileName").toString().indexOf("]")).replaceAll(" ","");
+
+
         String tempSubtitle = fileMap.get("fileName").toString();
         subtitle = subtitle + title.replaceAll("\\[","").replaceAll("]","").replaceAll("title:","").trim();
 

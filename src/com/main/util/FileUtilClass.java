@@ -1,5 +1,5 @@
 package com.main.util;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+
 import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.*;
@@ -7,7 +7,6 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -236,6 +235,10 @@ public class FileUtilClass {
 // }
 
 
+    /**
+     * Github에 업로드할 파일에 yaml 태그 입력
+     * @param fileMap yaml 태그를 생성할 파일의 정보
+     * */
     public void insertYmlTag(HashMap<String,Object> fileMap){
         HashMap<String,String> createYmlTagMap = createYmlTag(fileMap);
         try{
@@ -269,6 +272,10 @@ public class FileUtilClass {
         System.out.println("## file tag insert success : " +createYmlTagMap.get("title"));
     }
 
+    /**
+     * Github에 업로드할 파일의 Yaml 태그 생성
+     * @param fileMap yaml 태그를 생성할 파일의 정보
+     * */
     public HashMap<String,String> createYmlTag(HashMap<String,Object> fileMap){
         HashMap<String,String> createYmlTagMap = new HashMap<>();
 

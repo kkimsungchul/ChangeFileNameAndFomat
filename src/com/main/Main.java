@@ -23,9 +23,9 @@ public class Main {
         String tempPath;
         String tempTargetPath;
         //깃허브 공부내용 로컬저장소 위치 - 노트북
-        //String path = "C:\\Users\\USER\\Desktop\\kimsc\\0.깃허브-개발공부";
+        String path = "C:\\Users\\USER\\Desktop\\kimsc\\0.깃허브-개발공부";
         //깃허브 공부내용 로컬저장소 위치 - 집
-        String path ="C:\\Users\\sung\\Desktop\\개발\\study";
+        //String path ="C:\\Users\\sung\\Desktop\\개발\\study";
         //블로그 업로드 파일 위치
         String targetPath = "C:\\IntelliJProject\\kkimsungchul.github.io\\_posts";
         String blogCreateDirPath;

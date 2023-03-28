@@ -128,6 +128,7 @@ public class FileUtilClass {
             deleteSubFile(path);
             deleteDirectoryAndFile(path);
         }catch (Exception e){
+            e.printStackTrace();
             System.out.println("## 시스템 에러");
         }
     }
@@ -241,8 +242,11 @@ public class FileUtilClass {
      * */
     public void insertYmlTag(HashMap<String,Object> fileMap){
         HashMap<String,String> createYmlTagMap = createYmlTag(fileMap);
+        int count =0;
         try{
             List<String> lines = Files.readAllLines(Paths.get(createYmlTagMap.get("filePath")));
+            //파일상단, yaml 태그 밑에 특수문자 사용을 위해  {% endraw %} 추가
+            lines.add(0,"{% raw %}");
             lines.add(0,"---");
             lines.add(0,createYmlTagMap.get("categories"));
             lines.add(0,createYmlTagMap.get("date"));
@@ -252,18 +256,23 @@ public class FileUtilClass {
             lines.add(0,"---");
 
 
+
             File file = new File(createYmlTagMap.get("filePath"));
             FileWriter fileWriter = new FileWriter(file);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
             // 4. 파일에 쓰기
 
+
             for(String line : lines){
 //                System.out.println(line);
-                fileWriter.write(line);
+
+                //공백을 넣는 이유는 markdown 에서 공백 두칸 후 엔터를입력해야 줄바꿈으로 인식함
+                fileWriter.write(line+"  ");
                 fileWriter.write("\n");
             }
-
+            //파일 제일 하단에 {% endraw %} 추가
+            fileWriter.write("{% endraw %}");
             fileWriter.close();
 
         }catch (Exception e){

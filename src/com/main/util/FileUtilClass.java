@@ -262,14 +262,25 @@ public class FileUtilClass {
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
             // 4. 파일에 쓰기
-
-
+            int lineLength =1;
             for(String line : lines){
-//                System.out.println(line);
-
+                //사용하지 않는 우측 공백 제거
+                line = line.replaceAll("\\s+$","");
                 //공백을 넣는 이유는 markdown 에서 공백 두칸 후 엔터를입력해야 줄바꿈으로 인식함
-                fileWriter.write(line+"  ");
-                fileWriter.write("\n");
+                //엔터 여러줄 입력 방지
+                if(lineLength==0){
+                    if(line.length()!=0){
+                        fileWriter.write(line+"  ");
+                        fileWriter.write("\n");
+                        lineLength = line.length();
+                    }else{
+                        lineLength = 0;
+                    }
+                }else{
+                    fileWriter.write(line+"  ");
+                    fileWriter.write("\n");
+                    lineLength = line.length();
+                }
             }
             //파일 제일 하단에 {% endraw %} 추가
             fileWriter.write("{% endraw %}");

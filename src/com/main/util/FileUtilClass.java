@@ -255,8 +255,6 @@ public class FileUtilClass {
             lines.add(0,"layout: post");
             lines.add(0,"---");
 
-
-
             File file = new File(createYmlTagMap.get("filePath"));
             FileWriter fileWriter = new FileWriter(file);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -266,6 +264,12 @@ public class FileUtilClass {
             for(String line : lines){
                 //사용하지 않는 우측 공백 제거
                 line = line.replaceAll("\\s+$","");
+                
+                //#은제목, ##은 소제목으로 사용하기위해 변환, 다만 구분자로####이렇게 사용한적이 있어서 첫번째 #만 ##으로 변경
+                line = line.replaceFirst("#","##");
+
+//                //공백 2개 이상 제거
+//                line = line.replaceAll("\\s+"," ");
                 //공백을 넣는 이유는 markdown 에서 공백 두칸 후 엔터를입력해야 줄바꿈으로 인식함
                 //엔터 여러줄 입력 방지
                 if(lineLength==0){
@@ -332,7 +336,64 @@ public class FileUtilClass {
 
     }
 
+    /**
+     * study 폴더에 있는 텍스트 파일의 최상단 [ ,] 특수문자 제거
+     * @param map 첫라인을 변경할 파일 정보
+     * */
+    public void changeFirstLine(HashMap<String,Object> map){
+        String line="";
+        try{
+            //순서 중요, 해당파일의 내용들을 먼저 리스트에 담고나서 작업해야함
+            //File 객체를 먼저 만들어버릴 경우 해당 파일의 내용이 전부다 지워짐
+            List<String> lines = Files.readAllLines(Paths.get(map.get("path").toString()));
 
+            //시작문자에 []가 포함되어 있지 않으면 수정하지 않음
+            if(!line.contains("[") && !line.contains("]")){
+                return;
+            }
+
+            File file = new File(map.get("path").toString());
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+
+            for(int i=0;i<lines.size();i++){
+                line = lines.get(i);
+                
+                //첫번째 라인의 특수문자 치환
+                if(i==0){
+                    line = line.trim();
+                    if(line.contains("[") && line.contains("]")){
+                        line = line.replaceAll("\\[" , "");
+                        line = line.replaceAll("]" , "");
+                        line = line.trim();
+                        line = "# " + line;
+                    }
+                }
+                fileWriter.write(line);
+                fileWriter.write("\n");
+
+            }
+            fileWriter.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("## success change first line : " + map.get("fileName"));
+
+    }
+
+
+    public void getFirstLine(HashMap<String,Object> map){
+        try{
+            List<String> lines = Files.readAllLines(Paths.get(map.get("path").toString()));
+            if(!lines.get(0).startsWith("#")){
+                System.out.println(lines.get(0));
+                System.out.println(map.get("path").toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
 

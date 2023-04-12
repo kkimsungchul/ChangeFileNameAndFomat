@@ -169,7 +169,9 @@ public class FileUtilClass {
      * @param date 날짜
      * */
     public String changeFileName(String fileName , String date){
-        date = date.substring(0,10);
+        //date = date.substring(0,10);
+        //파일명 앞에 들어가는 날자를 모두 0000-00-00으로 고정
+        date = "0000-00-00";
         fileName = fileName.replaceAll("\\[" ,"");
         fileName = fileName.replaceAll("]" ,"");
         fileName = fileName.trim();
@@ -305,7 +307,7 @@ public class FileUtilClass {
 
         String filePath =fileMap.get("newFilePath").toString();
         String title ="title: ";
-        String date="date: ";
+        String date = "date: 0000-00-00 00:00:00 +0900";
         String subtitle="subtitle: ";
         String categories="categories: ";
         String layout="layout: post";
@@ -313,9 +315,11 @@ public class FileUtilClass {
         title = title + "\"" +fileMap.get("fileName").toString().replaceAll(".txt","")+"\"";
 
 
-        date = date + fileMap.get("lastModifiedTime").toString().replaceAll("T"," ");
-        date = date.substring(0,25) + " +0900";
-        //2019-03-26T08:06:08Z
+//        date = date + fileMap.get("lastModifiedTime").toString().replaceAll("T"," ");
+//        date = date.substring(0,25) + " +0900";
+//        2019-03-26T08:06:08Z
+
+
         //targetDirPath=C:\IntellijProject\kkimsungchul.github.io\_posts\Vue,
         String[] temp = fileMap.get("targetDirPath").toString().split("\\\\");
         categories = categories + temp[temp.length-1].replaceAll(" ","");

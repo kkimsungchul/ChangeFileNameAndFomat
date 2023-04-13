@@ -307,7 +307,7 @@ public class FileUtilClass {
 
         String filePath =fileMap.get("newFilePath").toString();
         String title ="title: ";
-        String date = "date: 0000-00-00 00:00:00 +0900";
+        String date = "date: 2023-01-01 00:00:00 +0900";
         String subtitle="subtitle: ";
         String categories="categories: ";
         String layout="layout: post";

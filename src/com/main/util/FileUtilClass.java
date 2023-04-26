@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 
@@ -242,12 +243,72 @@ public class FileUtilClass {
      * Github에 업로드할 파일에 yaml 태그 입력
      * @param fileMap yaml 태그를 생성할 파일의 정보
      * */
-    public void insertYmlTag(HashMap<String,Object> fileMap){
+//    public void insertYmlTag(HashMap<String,Object> fileMap){
+//        HashMap<String,String> createYmlTagMap = createYmlTag(fileMap);
+//        int count =0;
+//        try{
+//            List<String> lines = Files.readAllLines(Paths.get(createYmlTagMap.get("filePath")));
+//            //파일상단, yaml 태그 밑에 특수문자 사용을 위해  {% endraw %} 추가
+//            lines.add(0,"{% raw %}");
+//            lines.add(0,"---");
+//            lines.add(0,createYmlTagMap.get("categories"));
+//            lines.add(0,createYmlTagMap.get("date"));
+//            lines.add(0,createYmlTagMap.get("subtitle"));
+//            lines.add(0,createYmlTagMap.get("title"));
+//            lines.add(0,"layout: post");
+//            lines.add(0,"---");
+//
+//            File file = new File(createYmlTagMap.get("filePath"));
+//            FileWriter fileWriter = new FileWriter(file);
+//            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+//
+//            // 4. 파일에 쓰기
+//            int lineLength =1;
+//            for(String line : lines){
+//                //사용하지 않는 우측 공백 제거
+//                line = line.replaceAll("\\s+$","");
+//
+//                //#은제목, ##은 소제목으로 사용하기위해 변환, 다만 구분자로####이렇게 사용한적이 있어서 첫번째 #만 ##으로 변경
+//                line = line.replaceFirst("#","##");
+//
+////                //공백 2개 이상 제거
+////                line = line.replaceAll("\\s+"," ");
+//                //공백을 넣는 이유는 markdown 에서 공백 두칸 후 엔터를입력해야 줄바꿈으로 인식함
+//                //엔터 여러줄 입력 방지
+//                if(lineLength==0){
+//                    if(line.length()!=0){
+//                        fileWriter.write(line+"  ");
+//                        fileWriter.write("\n");
+//                        lineLength = line.length();
+//                    }else{
+//                        lineLength = 0;
+//                    }
+//                }else{
+//                    fileWriter.write(line+"  ");
+//                    fileWriter.write("\n");
+//                    lineLength = line.length();
+//                }
+//            }
+//            //파일 제일 하단에 {% endraw %} 추가
+//            fileWriter.write("{% endraw %}");
+//            fileWriter.close();
+//
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        System.out.println("## file tag insert success : " +createYmlTagMap.get("title"));
+//    }
+
+    /**
+     * Github에 업로드할 파일에 yaml 태그 입력 - 리팩토링
+     * @param fileMap yaml 태그를 생성할 파일의 정보
+     * */
+//    public vo
+    public void insertYmlTag(HashMap<String,Object> fileMap) {
         HashMap<String,String> createYmlTagMap = createYmlTag(fileMap);
-        int count =0;
-        try{
-            List<String> lines = Files.readAllLines(Paths.get(createYmlTagMap.get("filePath")));
-            //파일상단, yaml 태그 밑에 특수문자 사용을 위해  {% endraw %} 추가
+        try {
+            Path filePath = Paths.get(createYmlTagMap.get("filePath"));
+            List<String> lines = new ArrayList<>();
             lines.add(0,"{% raw %}");
             lines.add(0,"---");
             lines.add(0,createYmlTagMap.get("categories"));
@@ -257,46 +318,34 @@ public class FileUtilClass {
             lines.add(0,"layout: post");
             lines.add(0,"---");
 
-            File file = new File(createYmlTagMap.get("filePath"));
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            StringBuilder builder = new StringBuilder();
+            int lineLength = 1;
+            for (String line : Files.readAllLines(filePath, StandardCharsets.UTF_8)) {
 
-            // 4. 파일에 쓰기
-            int lineLength =1;
-            for(String line : lines){
-                //사용하지 않는 우측 공백 제거
-                line = line.replaceAll("\\s+$","");
-                
-                //#은제목, ##은 소제목으로 사용하기위해 변환, 다만 구분자로####이렇게 사용한적이 있어서 첫번째 #만 ##으로 변경
-                line = line.replaceFirst("#","##");
-
-//                //공백 2개 이상 제거
-//                line = line.replaceAll("\\s+"," ");
-                //공백을 넣는 이유는 markdown 에서 공백 두칸 후 엔터를입력해야 줄바꿈으로 인식함
-                //엔터 여러줄 입력 방지
-                if(lineLength==0){
-                    if(line.length()!=0){
-                        fileWriter.write(line+"  ");
-                        fileWriter.write("\n");
+                line = line.replaceAll("\\s+$", "");
+                line = line.replaceFirst("#", "##");
+                if (lineLength == 0) {
+                    if (line.length() != 0) {
+                        builder.append(line).append("  \n");
                         lineLength = line.length();
-                    }else{
+                    } else {
                         lineLength = 0;
                     }
-                }else{
-                    fileWriter.write(line+"  ");
-                    fileWriter.write("\n");
+                } else {
+                    builder.append(line).append("  \n");
                     lineLength = line.length();
                 }
             }
-            //파일 제일 하단에 {% endraw %} 추가
-            fileWriter.write("{% endraw %}");
-            fileWriter.close();
+            lines.add(builder.toString());
+            lines.add("{% endraw %}");
 
-        }catch (Exception e){
-            e.printStackTrace();
+            Files.write(filePath, lines, StandardCharsets.UTF_8);
+            System.out.println("## file tag insert success: " + createYmlTagMap.get("title"));
+        } catch (IOException e) {
+            System.err.format("IOException: %s%n", e);
         }
-        System.out.println("## file tag insert success : " +createYmlTagMap.get("title"));
     }
+
 
     /**
      * Github에 업로드할 파일의 Yaml 태그 생성

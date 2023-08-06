@@ -2,10 +2,11 @@ package com.main;
 
 import com.main.util.FileUtilClass;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ChangeFileNameAndFomatMain {
+public class ChangeFileNameAndFormatMain {
     public static void main(String[] args) {
 
         FileUtilClass fileUtilClass = new FileUtilClass();
@@ -39,7 +40,7 @@ public class ChangeFileNameAndFomatMain {
 
         System.out.println("## 파일 전체 탐색 시작");
         for(String dirName : dirList){
-            tempPath = path+"\\"+dirName;
+            tempPath = path+ File.separator+dirName;
             //fileList.addAll(fileUtilClass.getFileList(tempPath));
             fileList.addAll(fileUtilClass.getFilePathAndNameList(tempPath));
         }
@@ -59,7 +60,7 @@ public class ChangeFileNameAndFomatMain {
 
         System.out.println("## 파일의 모든 정보 가져오기");
         for(String dirName : dirList){
-            tempPath = path+"\\"+dirName;
+            tempPath = path+File.separator+dirName;
             tempTargetPath = targetPath + "\\"+dirName;
             fileAttributeList.addAll(fileUtilClass.getFileAttributeList(tempPath , tempTargetPath));
         }
@@ -77,7 +78,7 @@ public class ChangeFileNameAndFomatMain {
         //모든 디렉토리 정보 dirList
         System.out.println("## 블로그 폴더 전체 삭제");
         for(String targetDirName : targetDirList){
-            blogDeleteDirPath = targetPath+"\\"+targetDirName;
+            blogDeleteDirPath = targetPath+File.separator+targetDirName;
             fileUtilClass.deleteDirectoryAndFile(blogDeleteDirPath);
         }
 
@@ -85,7 +86,7 @@ public class ChangeFileNameAndFomatMain {
 
         System.out.println("## 블로그 폴더에 디렉토리 생성");
         for(String dirName : dirList){
-            blogCreateDirPath = targetPath+"\\"+dirName;
+            blogCreateDirPath = targetPath+File.separator+dirName;
             if(!fileUtilClass.makeDirectory(blogCreateDirPath)){
                 System.out.println("## 이미 존재하는 폴더 입니다. : " + dirName);
             }

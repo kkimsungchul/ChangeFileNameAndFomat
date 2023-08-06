@@ -67,7 +67,7 @@ public class FileUtilClass {
         File dir = new File(directory);
         for (File file : dir.listFiles()) {
             if (file.getName().endsWith((".txt"))) {
-                files.add(directory+"\\"+file.getName());
+                files.add(directory+File.separator+file.getName());
             }
         }
         return files;
@@ -86,7 +86,7 @@ public class FileUtilClass {
         String targetPath="";
         for (File file : dir.listFiles()) {
             if (file.getName().endsWith((".txt"))) {
-                filePath = directory+"\\"+file.getName();
+                filePath = directory+File.separator+file.getName();
                 path = Paths.get(filePath);
                 try{
                     Map<String,Object> tempMap =  Files.readAttributes(path,"*");
@@ -141,7 +141,7 @@ public class FileUtilClass {
     public void deleteSubFile(String path){
         ArrayList<String> fileList = getFileList(path);
         for(String fileName :fileList){
-            deleteDirectoryAndFile(path+"\\"+fileName);
+            deleteDirectoryAndFile(path+File.separator+fileName);
         }
 
     }
@@ -152,7 +152,7 @@ public class FileUtilClass {
      * */
     public String copyFile(HashMap<String,Object> map){
         String newFileName = changeFileName(map.get("fileName").toString() ,map.get("lastModifiedTime").toString());
-        String newFilePath = map.get("targetDirPath").toString()+"\\"+newFileName;
+        String newFilePath = map.get("targetDirPath").toString()+File.separator+newFileName;
         File file = new File(map.get("path").toString());
         File newFile = new File(newFilePath);
         try{

@@ -2,6 +2,7 @@ package com.main;
 
 import com.main.util.FileUtilClass;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,13 +27,13 @@ public class StudyFolderFileChange {
 
         System.out.println("## 파일 전체 탐색 시작");
         for(String dirName : dirList){
-            tempPath = path+"\\"+dirName;
+            tempPath = path+File.separator+dirName;
             //fileList.addAll(fileUtilClass.getFileList(tempPath));
             fileList.addAll(fileUtilClass.getFilePathAndNameList(tempPath));
         }
         System.out.println("## 파일의 모든 정보 가져오기");
         for(String dirName : dirList){
-            tempPath = path+"\\"+dirName;
+            tempPath = path+ File.separator+dirName;
             tempTargetPath = dirName;
             fileAttributeList.addAll(fileUtilClass.getFileAttributeList(tempPath , tempTargetPath));
         }
